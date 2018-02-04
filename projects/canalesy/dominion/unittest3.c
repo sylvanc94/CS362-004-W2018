@@ -36,7 +36,6 @@ int main()
 
 	printf ("TESTING discardCard():\n");
 
-	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	initializeGame(players, k, seed, &G); // initialize a new game
 
 	// Make copy of gameState so we can compare before and after
@@ -58,12 +57,13 @@ int main()
 	memset(&G, 23, sizeof(struct gameState));   // clear the game state
 	initializeGame(players, k, seed, &G); // initialize a new game
 
+
+
 	for (i = 0; i < maxHandCount - 1; i++) {
 
 #if (NOISY_TEST == 1)
 		printf("Testing trashFlag %d, handCount %d, handPos %d.\n", trashFlag, G.handCount[p], handPos);
 #endif
-
 		// Test else branch, where card is not last in array, and not only card left
 		discarded = G.hand[p][handPos];
 		last = G.hand[p][G.handCount[p] - 1];
