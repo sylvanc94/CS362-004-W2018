@@ -20,6 +20,7 @@ int main()
 	int a;
 	int b;
 	int result;
+	int pass = 1;
 
 	printf ("TESTING compare():\n");
 
@@ -61,6 +62,10 @@ int main()
 	assert(a == 2); // check if a hasn't been altered
 	assert(b == 2); // check if b hasn't been altered
 
-	printf("TEST SUCCESSFULLY COMPLETED!\n");
+	if (pass) {
+		printf("TEST SUCCESSFULLY COMPLETED!\n");
+	} else {
+		printf("TEST FAILED!\n");
+	}
 	return 0;
 }

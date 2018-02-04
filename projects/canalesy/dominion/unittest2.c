@@ -29,6 +29,7 @@ int main()
 	int deckCount;
 	int fullCount;
 	int returnValue;
+	int pass = 1;
 	int i, p, r;
 	int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
 	struct gameState G;
@@ -78,6 +79,10 @@ int main()
 		}
 	}
 
-	printf("TEST SUCCESSFULLY COMPLETED!\n");
+	if (pass) {
+		printf("TEST SUCCESSFULLY COMPLETED!\n");
+	} else {
+		printf("TEST FAILED!\n");
+	}
 	return 0;
 }

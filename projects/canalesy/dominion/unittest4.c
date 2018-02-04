@@ -26,6 +26,7 @@ int main()
 	int postCount;
 	int toFlag;
 	int p = 0;
+	int pass = 1;
 	int r;
 	int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
 	struct gameState G;
@@ -110,8 +111,15 @@ int main()
 	assert(G.handCount[p] == G2.handCount[p]);
 	assert(G.deckCount[p] == G2.deckCount[p]);
 	assert(G.discardCount[p] == G2.discardCount[p]);
+	assert(memcmp(&G.deck[p], &G2.deck[p], MAX_DECK * sizeof(int)) == 0);
+	assert(memcmp(&G.hand[p], &G2.hand[p], MAX_HAND * sizeof(int)) == 0);
+	assert(memcmp(&G.discard[p], &G2.discard[p], MAX_DECK * sizeof(int)) == 0);
 
 
-	printf("TEST SUCCESSFULLY COMPLETED!\n");
+	if (pass) {
+		printf("TEST SUCCESSFULLY COMPLETED!\n");
+	} else {
+		printf("TEST FAILED!\n");
+	}
 	return 0;
 }
