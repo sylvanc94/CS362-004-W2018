@@ -29,6 +29,7 @@ int main()
 	int choice3 = 0;
 	int card = smithy;
 	int pass = 1;
+	int playedCard;
 	int r;
 	int k[10] = {adventurer, council_room, feast, gardens, mine, remodel, smithy, village, baron, great_hall};
 	struct gameState G;
@@ -44,7 +45,7 @@ int main()
 #if (NOISY_TEST == 1)
 	printf("Testing PRE. deckCount %d, handCount %d, discardCount %d\n", G.deckCount[p], G.handCount[p], G.discardCount[p]);
 #endif
-
+	playedCard = G.hand[0][handPos];
 	r = cardEffect(card, choice1, choice2, choice3, &G, handPos, &bonus);
 
 #if (NOISY_TEST == 1)
@@ -54,18 +55,20 @@ int main()
 	assert(r == 0);
 	assert(G.hand[p][handPos] != smithy);
 	assert(G.deckCount[p] == G2.deckCount[p] - 3); // Player lost 3 cards from deck
-	assert(G.handCount[p] == G2.handCount[p] + 2);	// Player gained 3 cards and discarded one
+	assert(G.handCount[p] == G2.handCount[p] + 2); // Player gained 3 cards and discarded one
 
-	//assert(G.discardCount[p] == G2.discardCount[p] + 1); // Player discarded Smithy
-	if (!(G.discardCount[p] == G2.discardCount[p] + 1)) {
-		printf("Assertion failed: (G.discardCount[p] == G2.discardCount[p] + 1)\n");
+	// Check that card was added to the played pile
+	if (!(G.playedCardCount == G2.playedCardCount + 1)) {
+		printf("Assertion failed: (G.playedCardCount == G2.playedCardCount + 1)\n");
 		pass = 0;
 	}
-	//assert(G.discard[p][G.discardCount[p] - 1] == smithy);
-	if (!(G.discard[p][G.discardCount[p] - 1] == smithy)) {
-		printf("Assert failed: (G.discard[p][G.discardCount[p] - 1] == smithy)\n");
+
+	// Check that the played pile addition was the one that was played
+	if (!(G.playedCards[G.playedCardCount - 1] == playedCard)) {
+		printf("Assertion failed: (G.playedCards[G.playedCardCount - 1] == playedCard)\n");
 		pass = 0;
 	}
+
 
 	// Make sure state is unchanged for other player
 	p = 1;
