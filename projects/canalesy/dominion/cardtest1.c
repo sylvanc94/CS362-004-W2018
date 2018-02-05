@@ -39,10 +39,13 @@ int main()
 	initializeGame(players, k, seed, &G); // initialize a new game
 
 	// Force deck count to 0, to exercise the shuffle conditional branch
+	// and copy deck cards to the discard
+	memcpy(G.discard[p], G.deck[p], G.deckCount[p] * sizeof(int));
+	G.discardCount[p] = G.deckCount[p];
 	G.deckCount[p] = 0;
 
 	// Make copy of gameState so we can compare before and after
-	memcpy (&G2, &G, sizeof(struct gameState));
+	memcpy(&G2, &G, sizeof(struct gameState));
 
 #if (NOISY_TEST == 1)
 	printf("Testing. deckCount %d, handCount %d, discardCount %d\n", G.deckCount[p], G.handCount[p], G.discardCount[p]);
@@ -53,9 +56,8 @@ int main()
 	assert(r == 0);
 
 	// gameState should be altered by the shuffling
-	if (!(memcmp(&G, &G2, sizeof(struct gameState)) != 0)) {
-		printf("Assertion failed: memcmp(&G, &G2, sizeof(struct gameState) != 0)\n");
-	}
+	assert(memcmp(&G, &G2, sizeof(struct gameState)) != 0);
+
 
 
 	// Start a new test where the first two cards drawn should be treasure cards
