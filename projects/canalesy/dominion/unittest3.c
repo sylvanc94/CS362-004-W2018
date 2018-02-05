@@ -44,14 +44,29 @@ int main()
 
 	// Test trash vs. played
 	trashFlag = 1;	// do not add to played pile
+	discarded = G.hand[p][handPos];
 	discardCard(handPos, p, &G, trashFlag);
 
 #if (NOISY_TEST == 1)
 	printf("Testing trashFlag = 1.\n");
 #endif
 
+	// Card should not be on the played pile
 	assert(G.playedCardCount == G2.playedCardCount);
 
+	// Card should be on discard pile
+	if (!(G.discardCount[p] == G2.discardCount[p] + 1)) {
+		printf("Assertion failed: (G.discardCount[p] == G2.discardCount[p] + 1)\n");
+		pass = 0;
+	}
+	if (!(G.discard[p][G.discardCount[p] - 1] == discarded)) {
+		printf("Assertion failed: (G.discard[p][G.discardCount[p] - 1] == discarded)\n");
+		pass = 0;
+	}
+
+
+
+	// New test, playing vs. trashing the card
 	trashFlag = 0;
 	handPos = 0;
 
