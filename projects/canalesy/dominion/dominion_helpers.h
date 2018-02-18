@@ -3,6 +3,8 @@
 
 #include "dominion.h"
 
+int effectAdventurer(struct gameState *state);
+int effectSmithy(int handPos, struct gameState *state);
 int drawCard(int player, struct gameState *state);
 int updateCoins(int player, struct gameState *state, int bonus);
 int discardCard(int handPos, int currentPlayer, struct gameState *state,

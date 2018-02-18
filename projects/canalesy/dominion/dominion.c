@@ -677,7 +677,7 @@ int effectAdventurer(struct gameState *state) {
 		cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer] - 1]; //top card of hand is most recently drawn card.
 
 		//if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
-		if (cardDrawn = copper || cardDrawn == silver || cardDrawn == gold) /* bug introduced here */
+		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold) /* bug introduced here */
 			drawntreasure++;
 		else {
 			temphand[z] = cardDrawn;
@@ -690,6 +690,7 @@ int effectAdventurer(struct gameState *state) {
 		state->discard[currentPlayer][state->discardCount[currentPlayer]++] = temphand[z - 1]; // discard all cards in play that have been drawn
 		z = z - 1;
 	}
+
 
 	return 0;
 }
