@@ -1,0 +1,245 @@
+ID: TD-001
+Title:    Function discardCard() Not Adding to Discard Pile
+
+Class: Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:           3/4/2018
+Reported By:   Sylvan Canales
+Email:      canalesy@oregonstate.edu
+
+
+Product:   dominion.c           Version:
+Platform:  Mac OS               Version: 10.11.5
+Browser:   N/A                  Version:
+URL:       N/A 
+
+Is it reproducible: Yes
+
+Description
+===========
+The discardCard() function takes an input trashFlag, and when this flag is 0, the discarded card is added to the played pile. But when this flag >= 1, the card is not added to the discard pile. It just gets removed from the hand and disappears.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Make a function call to discardCard() using trashFlag = 1. This function call is made in the Embargo, Salvager, and Treasure Map card effects.
+
+
+Expected Results
+----------------
+The discarded card should be added to the discard pile and the discard count incremented by 1.
+
+
+Actual Results
+--------------
+The discarded card is not added to the discard pile, and the discard count is not incremented.
+
+
+Workarounds
+-----------
+No workarounds available without fixing the bug.
+
+Attachments
+-----------
+A test case
+
+Other Information
+-----------------
+Random seed: 10
+
+
+Test case:
+
+	initializeGame(players, k, seed, &G); // initialize a new game
+
+	// Make copy of gameState so we can compare before and after
+	memcpy (&G2, &G, sizeof(struct gameState));
+
+	// Test trash vs. played
+	trashFlag = 1;	// do not add to played pile
+	discarded = G.hand[p][handPos];
+	discardCard(handPos, p, &G, trashFlag);
+
+	// Card should not be on the played pile
+	assert(G.playedCardCount == G2.playedCardCount);
+
+	// Card should be on discard pile
+	if (!(G.discardCount[p] == G2.discardCount[p] + 1)) {
+		printf("Assertion failed: (G.discardCount[p] == G2.discardCount[p] + 1)\n");
+		pass = 0;
+	}
+	if (!(G.discard[p][G.discardCount[p] - 1] == discarded)) {
+		printf("Assertion failed: (G.discard[p][G.discardCount[p] - 1] == discarded)\n");
+		pass = 0;
+	}
+
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+
+
+ID: TD-002
+Title:    Smithy Card Effect Drawing Too Many Cards
+
+Class: Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:           3/4/2018
+Reported By:   Sylvan Canales
+Email:      canalesy@oregonstate.edu
+
+
+Product:   dominion.c           Version:
+Platform:  Mac OS               Version: 10.11.5
+Browser:   N/A                  Version:
+URL:       N/A 
+
+Is it reproducible: Yes
+
+Description
+===========
+The Smithy card effect function is supposed to draw 3 cards from the deck and then place Smithy on the played pile. Unit testing shows that the total number of cards added to the hand is not correct, and the total number of cards removed from the deck is not correct.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Play Smithy as normal using the cardEffect() function. This will call smithyEffect() which is the function that contains the logic for the Smithy card.
+
+Expected Results
+----------------
+The player hand should have 2 more cards in it. +3 drawn cards, -1 Smithy. Also, the Smithy card should be the last card added to the Played pile, and the played pile should have 1 more card than before.
+
+Actual Results
+--------------
+The player hand has gained too many cards, and the deck has had too many cards drawn from it.
+
+Workarounds
+-----------
+No workarounds available without fixing the bug.
+
+Attachments
+-----------
+A test case
+
+Other Information
+-----------------
+Random seed: 10
+
+
+Test case:
+
+	initializeGame(players, k, seed, &G); // initialize a new game
+
+	// Make copy of gameState so we can compare before and after
+	memcpy (&G2, &G, sizeof(struct gameState));
+
+	playedCard = G.hand[0][handPos];
+	r = cardEffect(card, choice1, choice2, choice3, &G, handPos, &bonus);
+
+	assert(r == 0);
+	assert(G.hand[p][handPos] != smithy);
+	// Player lost 3 cards from deck
+	if (!(G.deckCount[p] == G2.deckCount[p] - 3)) {
+		printf("Assertion failed: (G.deckCount[p] == G2.deckCount[p] - 3)\n");
+		pass = 0;
+	}
+	// Player gained 3 cards and discarded one
+	if (!(G.handCount[p] == G2.handCount[p] + 2)) {
+		printf("Assertion failed: (G.handCount[p] == G2.handCount[p] + 2)\n");
+		pass = 0;
+	}
+
+
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------
+
+
+ID: TD-003
+Title:    Adventurer Card Effect Drawing Too Many Cards 
+
+Class: Serious Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:           3/4/2018
+Reported By:   Sylvan Canales
+Email:      canalesy@oregonstate.edu
+
+
+Product:   dominion.c           Version:
+Platform:  Mac OS               Version: 10.11.5
+Browser:   N/A                  Version:
+URL:       N/A 
+
+Is it reproducible: Yes
+
+Description
+===========
+The adventurer card effect draws cards until 2 treasure are found and keeps those in the hand. Unit testing reveals the number of cards drawn from the deck and placed in the hand are not correct. 
+
+Steps to Produce/Reproduce
+--------------------------
+Play Adventurer with a known deck, where you can control the location and amount of treasure cards. Try a deck where the top 2 cards are treasure cards. The function should draw those 2 cards and none other. But in this scenario it draws the wrong number of cards.
+
+Expected Results
+----------------
+The player hand should have 2 more treasure cards in it, and the discard should have no additional cards in this prepared deck.
+
+Actual Results
+--------------
+The player hand has gained too many cards, and the deck has had too many cards drawn from it.
+
+Workarounds
+-----------
+No workarounds available without fixing the bug.
+
+Attachments
+-----------
+A test case
+
+Other Information
+-----------------
+Random seed: 10
+
+
+Test case:
+
+// Start a new test where the first two cards drawn should be treasure cards
+	memset(&G, 23, sizeof(struct gameState));   // clear the game state
+	initializeGame(players, k, seed, &G); // initialize a new game
+
+	// Make copy of gameState so we can compare before and after
+	memcpy (&G2, &G, sizeof(struct gameState));
+
+	p = 0;
+	handPos = 0;
+	G.deck[p][G.deckCount[p] - 1] = gold;
+	G.deck[p][G.deckCount[p] - 2] = gold;
+
+	r = cardEffect(card, choice1, choice2, choice3, &G, handPos, &bonus);
+
+	assert(r == 0);
+	//assert(G.deckCount[p] == G2.deckCount[p] - 2);
+
+	if (!(G.deckCount[p] == G2.deckCount[p] - 2)) {
+		printf("Assertion failed: (G.deckCount[p] == G2.deckCount[p] - 2)\n");
+		pass = 0;
+	}
+
+	//assert(G.handCount[p] == G2.handCount[p] + 2);
+
+	if (!(G.handCount[p] == G2.handCount[p] + 2)) {
+		printf("Assertion failed: (G.handCount[p] == G2.handCount[p] + 2)\n");
+		pass = 0;
+	}
+
+	//assert(G.discardCount[p] == G2.discardCount[p]);
+	if (!(G.discardCount[p] == G2.discardCount[p])) {
+		printf("Assertion failed: (G.discardCount[p] == G2.discardCount[p])\n");
+		pass = 0;
+	}
+
