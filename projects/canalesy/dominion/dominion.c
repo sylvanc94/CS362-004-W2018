@@ -784,7 +784,7 @@ int effectCutpurse(int handPos, struct gameState *state) {
 				if (state->hand[i][j] == copper)
 				{
 					discardCard(j, i, state, 0);
-					//break;  /* bug introduced here */
+					break; 
 				}
 				if (j == state->handCount[i])
 				{
