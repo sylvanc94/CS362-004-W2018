@@ -27,8 +27,7 @@ public class UrlValidatorTest extends TestCase {
 
 		// Print instructions to user.
 		System.out.println("Manual test session has started");
-		System.out
-				.println("Enter a URL into the command line to test isValid() function [Type 'exit' to end session]:");
+		System.out.println("Enter a URL into the command line to test isValid() function [Type 'exit' to end session]:");
 
 		// Set up our URL validator
 		UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
@@ -36,8 +35,10 @@ public class UrlValidatorTest extends TestCase {
 		// Declarations
 		String input = ""; // Variable to hold user input
 		boolean result; // Variable to hold the results of manual test
-		int manual = 0; // Select manual mode or pre-defined URL mode
+		int manual = 1; // Select manual mode or pre-defined URL mode
 
+		/* IMPORTANT NOTE: This is our **MANUAL TEST** Implementation, usable when manual var = 1. Per lesson 5 of course 
+				 materials, human input is *REQUIRED* for manual testing. The code block below makes this possible. */
 		if (manual == 1) {
 			// While loop will repeat until user types the command "exit"
 			while (!(input.equals("exit"))) {
@@ -57,6 +58,12 @@ public class UrlValidatorTest extends TestCase {
 				}
 
 			}
+
+		/* IMPORTANT NOTE: Our group acknowledges this next code block is *NOT* true manual testing per course materials, 
+				as there is no human input component. We simply implemented this **AUTOMATED** testing 
+				to **MIMIC** human input to save us time while performing the test. This can simply be 
+				considered a helper resourse for our group's internal purposes only, and is *NOT* what 
+				we want graded for manual testing. See block above for manual test implementation.  */	
 		} else {
 			String urls[] = {
 					// All these URLs are passing if using the code from UrlValidatorCorrect
