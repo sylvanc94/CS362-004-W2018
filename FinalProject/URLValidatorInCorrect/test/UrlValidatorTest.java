@@ -21,39 +21,14 @@ public class UrlValidatorTest extends TestCase {
    
    public void testManualTest()
    {
-	 //You can use this function to implement your manual testing	 	 
-	 String[] schemes = {"http","https", "ftp"};
-     UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.NO_FRAGMENTS);
-     String urls[] = {
-    		 // All these URLs are passing if using the code from UrlValidatorCorrect
-    		 "https://google.com",
-    		 "ftp://www.google.com",
-    		 "http://www.google.com",
-    		 "http://192.168.0.1",
-    		 "https://goo.gl/",
-    		 "sftp://www.google.com/",
-    		 "https://www.invest.google.com/",
-    		 "https://100.220.30.140",
-    		 "sftp://www.www.net/",
-    		 "http://info.info.info.info.info"
-     };
-     
-     for (int i = 0; i < urls.length; i++) {
-	    	 if ( urlValidator.isValid(urls[i]) ) {
-	    		 System.out.printf("pass: %s", urls[i]);
-	    		 System.out.println();
-	    	 } else {
-	    		 System.out.printf("fail: %s", urls[i]);
-	    		 System.out.println();
-	    	 }   	 
-     }
+//You can use this function to implement your manual testing	   
 	   
    }
    
    
    public void testYourFirstPartition()
    {
-	 //You can use this function to implement your First Partition testing	
+	 //You can use this function to implement your First Partition testing	   
 
    }
    
