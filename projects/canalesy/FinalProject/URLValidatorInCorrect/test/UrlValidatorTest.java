@@ -101,20 +101,8 @@ public class UrlValidatorTest extends TestCase {
    
    public void testIsValid()
    {
-	   /*You can use this function for programming based testing
-	   Description: 
-	   	> This function will build a URL, it will then utilize the InetAddress class to verify a URL is acceptable 
-	   Citations:
-	   	> [1] = http://www.avajava.com/tutorials/lessons/how-do-i-use-a-host-name-to-look-up-an-ip-address.html 
-	   */
-	   
-	   //for loop that will call our loop 10,00 times
-	   	  //build a string 
-	   	  //test if URL is valid by calling DNS 
-	      //make the call
-
+		//You can use this function for programming based testing   
    }
    
-
 
 }
