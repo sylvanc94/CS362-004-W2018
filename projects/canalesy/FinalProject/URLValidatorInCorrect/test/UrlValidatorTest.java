@@ -432,10 +432,10 @@ public class UrlValidatorTest extends TestCase {
 		 // Boundary case 2: Inordinately long, valid URL
 		 URL = "http://thelongestlistofthelongeststuffatthelongestdomainnameatlonglast.com/wearejustdoingthistobestupidnows"
 		 		+ "incethiscangoonforeverandeverandeverbutitstilllookskindaneatinthebrowsereventhoughitsabigwasteoftimeande"
-		 		+ "nergyandhasnorealpointbutwehadtodoitanyways.html";  																									 // Pass empty string 
+		 		+ "nergyandhasnorealpointbutwehadtodoitanyways.html";  													 // Pass long string
 	     result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
 	     System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, true ,result); 			 // Print logging to user   
-	     if(result != false) {errorCounter++;}		     
+	     if(result != true) {errorCounter++;}		     
 	     
 		  // Display Summary 
 		  System.out.printf("\nSummary:\n");
