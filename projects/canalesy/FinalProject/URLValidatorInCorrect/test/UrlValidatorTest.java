@@ -182,11 +182,11 @@ public class UrlValidatorTest extends TestCase {
 		  *  > Tests: 
 		  *    A map of the partition sets this function tests is below:   
 		  *    
-		  *  	1. Initial test, Remove Schema: <UrlAuthority> <UrlPort> <Path> <?=UrlQuery>       | expect: true  (scheme not mandatory)                  
-		  *  	   		i.   Sub-test, remove auth:         <UrlPort> <Path> <?=UrlQuery>		   | expect: false (we always need auth) 
-		  *  	   		ii.	 Sub-test, remove port:         <UrlAuthority> <Path> <?=UrlQuery>     | expect: true  (port not mandatory) 
-		  *  			iii. Sub-test, remove Path:		    <UrlAuthority> <UrlPort> <?=UrlQuery>  | expect: true  (don't need path) 
-		  *  			iv.  Sub-test, remove UrlQuery:     <UrlAuthority> <UrlPort> <Path>        | expect: true  (don't need query)
+		  *  	1. Initial test, Remove Schema: <UrlAuthority> <UrlPort> <Path> <?=UrlQuery>       | expect: false  (scheme mandatory)                  
+		  *  	   		i.   Sub-test, remove auth:         <UrlPort> <Path> <?=UrlQuery>		   | expect: false  (scheme mandatory) 
+		  *  	   		ii.	 Sub-test, remove port:         <UrlAuthority> <Path> <?=UrlQuery>     | expect: false  (scheme mandatory) 
+		  *  			iii. Sub-test, remove Path:		    <UrlAuthority> <UrlPort> <?=UrlQuery>  | expect: false  (scheme mandatory)
+		  *  			iv.  Sub-test, remove UrlQuery:     <UrlAuthority> <UrlPort> <Path>        | expect: false  (scheme mandatory)
 		  *     Note: Testers, go to 'calendar.oregonstate.edu:80/about/?query=graduation'. This is why we expect true for no scheme. 
 		  *  
 		  *  	2. Initial test, Remove Authority: <UrlScheme> <UrlPort> <Path> <?=UrlQuery>       | expect: false (we always need auth) 
@@ -197,21 +197,21 @@ public class UrlValidatorTest extends TestCase {
 		  *     Note: Testers, go to 'http://:80/about/?query=graduation'. This is why we expect false for no scheme. 
 		  *  
 		  *  	3. Initial test, Remove Port: <UrlScheme> <UrlAuthority> <Path> <?=UrlQuery>       | expect: true  (dont need port)
-		  *  	   		i.   Sub-test, remove scheme:       <UrlAuthority> <Path> <?=UrlQuery>     | expect: true  (scheme not mandatory) 
+		  *  	   		i.   Sub-test, remove scheme:       <UrlAuthority> <Path> <?=UrlQuery>     | expect: false (scheme mandatory)
 		  *  	   		ii.	 Sub-test, remove authority:    <UrlScheme> <Path> <?=UrlQuery>        | expect: false (always need auth)   
 		  *  			iii. Sub-test, remove Path:         <UrlScheme> <UrlAuthority> <?=UrlQuery>| expect: true  (don't need path if query)   
 		  *  			iv.  Sub-test, remove UrlQuery:     <UrlScheme> <UrlAuthority> <Path>      | expect: true  (dont need query)
 		  *     Note: Testers, go to 'https://calendar.oregonstate.edu/about/?query=graduation'. This is why we expect true for no port. 
 		  *  
 		  *  	4. Initial test, Remove Path: <UrlScheme> <UrlAuthority> <UrlPort> <?=UrlQuery>    | expect: true  (dont need path)
-		  *  			i.    Sub-test, remove scheme:      <UrlAuthority> <UrlPort> <?=UrlQuery>  | expect: true  (scheme not mandatory) 
+		  *  			i.    Sub-test, remove scheme:      <UrlAuthority> <UrlPort> <?=UrlQuery>  | expect: false (scheme mandatory)
 		  *  	   		ii.   Sub-test, remove auth:        <UrlScheme> <UrlPort> <?=UrlQuery>     | expect: false (always need auth)
 		  *  	   		iii.  Sub-test, remove port:        <UrlScheme> <UrlAuthority> <?=UrlQuery>| expect: true  (dont need port/path)
 		  *  			iv.   Sub-test, remove UrlQuery:    <UrlScheme> <UrlAuthority> <UrlPort>   | expect: true  (dont need query)
 		  * 	Note: Testers, go to http://calendar.oregonstate.edu:80/?query=graduation. This is why we expect true for no path. 
 		  *  
 		  *  	5. Initial test, Remove Query: <UrlScheme> <UrlAuthority> <UrlPort> <Path>         | expect: true  (dont need query)
-		  *  	   		i.   Sub-test, remove scheme:       <UrlAuthority> <UrlPort> <Path>        | expect: true  (scheme not mandatory) 
+		  *  	   		i.   Sub-test, remove scheme:       <UrlAuthority> <UrlPort> <Path>        | expect: false (scheme mandatory)
 		  *  	   		ii.	 Sub-test, remove auth:         <UrlScheme> <UrlPort> <Path>           | expect: false (always need auth)
 		  *  			iii. Sub-test, remove port:         <UrlScheme> <UrlAuthority> <Path>      | expect: true  (dont need port) 
 		  *  			iv.  Sub-test, remove path:         <UrlScheme> <UrlAuthority> <UrlPort>   | expect: true  (dont need path) 
@@ -230,11 +230,11 @@ public class UrlValidatorTest extends TestCase {
 		 
 		 // 2D Array to store our expected bool results - see the "expect" descriptions in comment above for where these values are coming from
 		 boolean[][] expectedResults = new boolean[][]{
-			  {true, false, true, true, true},     // here are our five scheme results, initial results in index 0 and then four subs results i - iv in indices 1-4
-			  {false, false, false, false, false}, // here are our five authority results (same syntax as scheme - values and descriptions listed in above comments)
-			  {true, true, false, true, true},     // so on and so forth...
-			  {true, true, false, true, true},
-			  {true, true, false, true, true},
+			  {false, false, false, false, false},     // here are our five scheme results, initial results in index 0 and then four subs results i - iv in indices 1-4
+			  {false, false, false, false, false},     // here are our five authority results (same syntax as scheme - values and descriptions listed in above comments)
+			  {true, false, false, true, true},        // so on and so forth...
+			  {true, false, false, true, true},
+			  {true, false, false, true, true},
 			};
 		 
 		 // Perform all tests that omit partition(s) 
