@@ -98,7 +98,7 @@ public class UrlValidatorTest extends TestCase {
 
 	}
 
-	// This is done, please let me know if there are questions/concerns on slack so we can discuss any potential changes as a group -Tim
+	// This is done, please let me know if there are questions/concerns so we can discuss any potential changes as a group -Tim
 	public void testYourFirstPartition() {
 
 	 /* Description: 
@@ -123,8 +123,8 @@ public class UrlValidatorTest extends TestCase {
 	   
 	   // Print information to user. 
 	   System.out.printf("\n* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
-	   System.out.printf("First Partition test session has started.\n");
-	   System.out.printf("Testing omitted partitions from http://calendar.oregonstate.edu:80/search/?query=graduation.\n\n");	   
+	   System.out.printf("Partition test session has started.\n");
+	   System.out.printf("Omitting partition sets from http://calendar.oregonstate.edu:80/search/?query=graduation.\n\n");	   
 	   
 	   // Set up our URL validator
 	   UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);	
@@ -283,7 +283,7 @@ public class UrlValidatorTest extends TestCase {
 	  System.out.printf("  > Note: Copying and pasting every URL above with expected result 'true' will take you to a valid webpage. \n\n");	  
 		 
 	  // Display testing has ended to console 	 
-	  System.out.printf("First Partition test session has ended.\n");	
+	  System.out.printf("Partition test session has ended.\n");	
 	  System.out.printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
 	 
    }
@@ -298,26 +298,101 @@ public class UrlValidatorTest extends TestCase {
 	   return URL;
    }
 
+	// This is done, please let me know if there are questions/concerns so we can discuss any potential changes as a group -Tim
 	public void testYourSecondPartition() {
 
-       // Display testing has started to console
+	 /* Description: 
+	  *  > In 'testYourFirstPartition()', we focused on what happens when certain code partitions were *omitted*. In this 
+	  *    partition testing, we will focus on: 
+	  *    
+      *    - What happens when bad partitions are introduced into the URL
+	  *    
+	  *    The partitions are below: 
+	  *    
+	  *    <UrlScheme> :// <UrlAuthority> : <UrlPort> / <Path> / <?=UrlQuery>
+	  */  	   
+	   
+	   // Print information to user. 
 	   System.out.printf("\n* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
-	   System.out.printf("Second Partition test session has started.\n");
-
-
-
-
-
-	    // You can use this function to implement your Second Partition testing
-		//...code here. 
-
-
-
-
-
-	  // Display testing has ended to console 	 
-	  System.out.printf("Second Partition test session has ended.\n");	
-	  System.out.printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
+	   System.out.printf("Partition test session has started.\n");
+	   System.out.printf("Inserting bad partitions into http://calendar.oregonstate.edu:80/search/?query=graduation\n\n");	   
+	   
+	   // Set up our URL validator
+	   UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);	
+	   
+	   // Create a URL array strand of partitions for valid URL: 'http://calendar.oregonstate.edu:80/search/?query=graduation' 
+	   // (tester can plug URL into browser to verify validity)	   
+	   String validPartitions[] = {
+			   "http://",
+			   "calendar.oregonstate.edu",
+			   ":80",
+			   "/search",
+			   "/?query=graduation"   
+       };	   
+	   
+	   // Create a URL array strand of invalid partitions to insert into valid URL 'http://calendar.oregonstate.edu:80/search/?query=graduation'
+	   String invalidPartitions[] = {
+		   		"bad:/",
+		   		"calendar.orgstate.gov",
+		   		":122",
+		   		"/foo",
+		   		"/?query=bar" 		
+	   };
+	    
+	    /*  
+	    * PARITION TEST - Incorrect Partitions:  
+	    * We will now take this valid URL, and insert bad components one by one.                                
+	    * 1. Test full w/ bad schema: bad:/calendar.oregonstate.edu:80/search/?query=graduation 
+	    * 2. Test full w/ bad authority: http://calendar.orgstate.gov:80/search/?query=graduation 
+	    * 3. Test full w/ bad port: http://calendar.oregonstate.edu:122/search/?query=graduation 
+	    * 4. Test full w/ bad path: http://calendar.oregonstate.edu:80/foo/?query=graduation 
+	    * 5. Test full w/ bad query: http://calendar.oregonstate.edu:80/search/?query=bar                 
+	    * Notes: We expect *ALL* tests to come back as InValid URL, if any are successful then we know there is a problem!     
+	    */ 
+	  
+	     // Variable declarations
+	     String URL = "";   	// Declare URL string 
+		 boolean result;    	// Variable to hold the results of manual test
+		 int errorCounter = 0;  // Variable to track errors 
+		   
+		 // 1. Test full w/ bad schema: bad:/calendar.oregonstate.edu:80/search/?query=graduation 
+		 URL = invalidPartitions[0] + validPartitions[1] + validPartitions[2] + validPartitions[3] + validPartitions[4]; // Build full URL
+		 result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+		 System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	         // Print logging to user   
+		 if(result != false) {errorCounter++;}																			 // increment errors	 
+		 
+		 // 2. Test full w/ bad authority: http://calendar.orgstate.gov:80/search/?query=graduation  
+		 URL = validPartitions[0] + invalidPartitions[1] + validPartitions[2] + validPartitions[3] + validPartitions[4]; // Build full URL
+		 result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+	     System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	         // Print logging to user   
+         if(result != false) {errorCounter++;}																			 // increment errors
+		 
+		 // 3. Test full w/ bad port: http://calendar.oregonstate.edu:122/search/?query=graduation 
+		 URL = validPartitions[0] + validPartitions[1] + invalidPartitions[2] + validPartitions[3] + validPartitions[4]; // Build full URL
+	     result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+	     System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	         // Print logging to user   
+	     if(result != false) {errorCounter++;}																			 // increment errors
+		 
+		 // 4. Test full w/ bad path: http://calendar.oregonstate.edu:80/foo/?query=graduation 
+		 URL = validPartitions[0] + validPartitions[1] + validPartitions[2] + invalidPartitions[3] + validPartitions[4]; // Build full URL
+		 result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+		 System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	         // Print logging to user   
+		 if(result != false) {errorCounter++;}																			 // increment errors
+		 
+		 // 5. Test full w/ bad query: http://calendar.oregonstate.edu:80/search/?query=bar   
+		 URL = validPartitions[0] + validPartitions[1] + validPartitions[2] + validPartitions[3] + invalidPartitions[4]; // Build full URL
+	     result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+	     System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	         // Print logging to user   
+	     if(result != false) {errorCounter++;}																			 // increment errors		 
+		 
+		  // Display Summary 
+		  System.out.printf("\nSummary:\n");
+	      System.out.printf("  > Partition tester found %d errors (i.e. actual output was not equal expected output).\n", errorCounter);
+		  System.out.printf("  > Note: Copying and pasting every URL above with expected result 'false' will fail to take you to a valid webpage. \n\n");	  
+			 
+		  // Display testing has ended to console 	 
+		  System.out.printf("Partition test session has ended.\n");	
+		  System.out.printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");		 
 
 	}
 	// You need to create more test cases for your Partitions if you need to
