@@ -107,7 +107,12 @@ public class UrlValidatorTest extends TestCase {
 	  *    box testing approach is to simplify the targeting of errors by controlling individual 
 	  *    aspects of the input to such an extent that if the software under test returns an error,
 	  *    we have a good understanding of which data component may be mis-handled in the underlying 
-	  *    program. See reference [1] for additional information. The partitions to test are below: 
+	  *    program. See reference [1] for additional information. In this partition testing, we will 
+	  *    focus on:
+	  * 
+	  *    - What happens when partitions are omitted from a URL. 
+	  *
+	  *    The partitions to test are below: 
 	  *     
 	  *     <UrlScheme> :// <UrlAuthority> : <UrlPort> / <Path> / <?=UrlQuery>
 	  *    
@@ -119,7 +124,7 @@ public class UrlValidatorTest extends TestCase {
 	   // Print information to user. 
 	   System.out.printf("\n* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
 	   System.out.printf("First Partition test session has started.\n");
-	   System.out.printf("Testing partitions for http://calendar.oregonstate.edu:80/search/?query=graduation,\nwhich tester knows to be valid.\n\n");	   
+	   System.out.printf("Testing omitted partitions from http://calendar.oregonstate.edu:80/search/?query=graduation.\n\n");	   
 	   
 	   // Set up our URL validator
 	   UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);	
@@ -294,7 +299,6 @@ public class UrlValidatorTest extends TestCase {
    }
 
 	public void testYourSecondPartition() {
-		// You can use this function to implement your Second Partition testing
 
        // Display testing has started to console
 	   System.out.printf("\n* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
@@ -304,7 +308,7 @@ public class UrlValidatorTest extends TestCase {
 
 
 
-		// You can use this function for programming based testing
+	    // You can use this function to implement your Second Partition testing
 		//...code here. 
 
 
