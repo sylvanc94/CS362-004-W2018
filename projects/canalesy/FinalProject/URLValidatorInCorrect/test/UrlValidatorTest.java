@@ -112,8 +112,7 @@ public class UrlValidatorTest extends TestCase {
 	  * 
 	  *    - What happens when partitions are omitted from a URL. 
 	  *
-	  *    The partitions to test are below: 
-	  *     
+	  *    The partitions to test are below:   
 	  *     <UrlScheme> :// <UrlAuthority> : <UrlPort> / <Path> / <?=UrlQuery>
 	  *    
 	  * Citations: 
@@ -308,7 +307,6 @@ public class UrlValidatorTest extends TestCase {
       *    - What happens when bad partitions are introduced into the URL
 	  *    
 	  *    The partitions are below: 
-	  *    
 	  *    <UrlScheme> :// <UrlAuthority> : <UrlPort> / <Path> / <?=UrlQuery>
 	  */  	   
 	   
@@ -396,6 +394,58 @@ public class UrlValidatorTest extends TestCase {
 
 	}
 	// You need to create more test cases for your Partitions if you need to
+
+   // This is done, please let me know if there are questions/concerns so we can discuss any potential changes as a group -Tim
+   public void testYourThirdPartition()
+   { 
+
+		 /* Description: 
+		  *  > In 'testYourSecondPartition()', we focused on what happens when certain code partitions were *bad*. In this 
+		  *    partition testing, we will focus on: 
+		  *    
+	      *    - What happens in the boundary cases, that is input that is very large and input that is nothing at all
+	      *    
+	      *  Citations: 
+	      *  > [1] - http://archive.oreilly.com/pub/post/the_worlds_longest_domain_name.html  
+	      *    
+		  */  	   
+	
+		 // Print information to user. 
+		 System.out.printf("\n* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
+		 System.out.printf("Partition test session has started.\n");
+		 System.out.printf("Testing boundary cases for isValid() by using empty and inordinately long partitions \n\n");	
+
+		 // Set up our URL validator
+		 UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);	
+		   		 
+	     // Variable declarations
+	     String URL = "";   	// Declare URL string 
+		 boolean result;    	// Variable to hold the results of manual test
+		 int errorCounter = 0;  // Variable to track errors 
+	   
+		 // Boundary case 1: No input at all
+		 URL = "";  																									 // Pass empty string 
+	     result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+	     System.out.printf("test: '%s' (emtpy) | expected result: %s, isValid() returned: %s \n", URL, false ,result); 	 // Print logging to user   
+	     if(result != false) {errorCounter++;}		
+	   
+		 // Boundary case 2: Inordinately long, valid URL
+		 URL = "http://thelongestlistofthelongeststuffatthelongestdomainnameatlonglast.com/wearejustdoingthistobestupidnows"
+		 		+ "incethiscangoonforeverandeverandeverbutitstilllookskindaneatinthebrowsereventhoughitsabigwasteoftimeande"
+		 		+ "nergyandhasnorealpointbutwehadtodoitanyways.html";  																									 // Pass empty string 
+	     result = validator.isValid(URL);                                                                                // Call the isValid function and pass in the URL
+	     System.out.printf("test: '%s' | expected result: %s, isValid() returned: %s \n", URL, true ,result); 			 // Print logging to user   
+	     if(result != false) {errorCounter++;}		     
+	     
+		  // Display Summary 
+		  System.out.printf("\nSummary:\n");
+	      System.out.printf("  > Partition tester found %d errors (i.e. actual output was not equal expected output).\n", errorCounter);
+		  System.out.printf("  > Note: Copying and pasting every URL above with expected result 'true' will take you to a valid webpage. \n\n");	  
+			 
+		  // Display testing has ended to console 	 
+		  System.out.printf("Partition test session has ended.\n");	
+		  System.out.printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");		   
+   }   
 
 	public void testIsValid() {
 
