@@ -1,5 +1,5 @@
 import junit.framework.TestCase;
-import java.util.Scanner;
+import java.util.*;
 
 //You can use this as a skeleton for your 3 different test approach
 //It is an optional to use this file, you can generate your own test file(s) to test the target function!
@@ -459,7 +459,406 @@ public class UrlValidatorTest extends TestCase {
 
 		// You can use this function for programming based testing
 		//...code here. 
+	   boolean result;
+	   UrlValidator validator;
+	   int runs = 0;
+	   int failures = 0;
 
+	   // Unit Test #1 - valid components, DEFAULT_SCHEMES
+
+	   /* Description:
+		* First unit test matches every combination of valid URL component into a URL string and
+		* passes it to isValid(), checking the result against 'true' since these are all valid components.
+		* This test case uses the DEFAULT_SCHEMES option of the UrlValidator object by passing (null, null, 0L)
+		* as parameters.
+		*/
+
+		// As it turns out, using DEFAULT_SCHEMES causes every test case to fail, whether it's using http, https, or ftp.
+
+	   validator = new UrlValidator(null, null, 0L);
+	   System.out.println();
+	   System.out.println("Testing all valid components with new UrlValidator(null, null, 0L) DEFAULT_SCHEMES");
+	   
+	   // Test all valid URL components. Each of these iterations should return TRUE from isValid().
+	   // If there are bugs, then some (or all) of these will return FALSE.
+	   for (int schemeIdx = 0; schemeIdx < validScheme.length; schemeIdx++) {
+	   		String scheme = validScheme[schemeIdx];
+
+	   		for (int separatorIdx = 0; separatorIdx < validAuthoritySeparator.length; separatorIdx++) {
+	   			String separator = validAuthoritySeparator[separatorIdx];
+
+	   			for (int authorityIdx = 0; authorityIdx < validAuthority.length; authorityIdx++) {
+	   				String authority = validAuthority[authorityIdx];
+
+	   				for (int portIdx = 0; portIdx < validPort.length; portIdx++) {
+	   					String port = validPort[portIdx];
+
+	   					for (int pathIdx = 0; pathIdx < validPath.length; pathIdx++) {
+	   						String path = validPath[pathIdx];
+
+	   						for (int queryIdx = 0; queryIdx < validQuery.length; queryIdx++) {
+	   							String query = validQuery[queryIdx];
+
+	   							StringBuilder urlBuilder = new StringBuilder();
+	   							urlBuilder.append(scheme);
+	   							urlBuilder.append(separator);
+	   							urlBuilder.append(authority);
+	   							urlBuilder.append(port);
+	   							urlBuilder.append(path);
+	   							urlBuilder.append(query);
+	   							
+	   							String url = urlBuilder.toString();
+	   							result = validator.isValid(url);
+	   							runs++;
+	   							if (result == false) {
+	   								//System.out.println("Test FAILED with URL: " + url);
+	   								failures++;
+	   							} else {
+	   								//System.out.println("Test PASS with URL:   " + url);
+	   							}
+	   						}
+	   					}
+	   				}
+	   			}
+	   		}
+	   }
+
+	   System.out.printf("Runs: %d, failures: %d\n", runs, failures);	
+
+
+	   runs = 0;
+	   failures = 0;
+
+
+		// Unit Test #2 - valid components, ALLOW_ALL_SCHEMES
+
+	   /* Description:
+		* Second unit test matches every combination of valid URL component into a URL string and
+		* passes it to isValid(), checking the result against 'true' since these are all valid components.
+		* This test case uses the ALLOW_ALL_SCHEMES option of the UrlValidator object by passing
+		* UrlValidator.ALLOW_ALL_SCHEME as the only parameter to the constructor.
+		*/
+
+	   System.out.println();
+	   System.out.println("Testing valid components with new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES)");
+	   validator = new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES);
+
+	   // Test all valid URL components. Each of these iterations should return TRUE from isValid().
+	   // If there are bugs, then some (or all) of these will return FALSE.
+	   for (int schemeIdx = 0; schemeIdx < validScheme.length; schemeIdx++) {
+	   		String scheme = validScheme[schemeIdx];
+	   		
+	   		for (int separatorIdx = 0; separatorIdx < validAuthoritySeparator.length; separatorIdx++) {
+	   			String separator = validAuthoritySeparator[separatorIdx];
+	   			
+	   			for (int authorityIdx = 0; authorityIdx < validAuthority.length; authorityIdx++) {
+	   				String authority = validAuthority[authorityIdx];
+	   				
+	   				for (int portIdx = 0; portIdx < validPort.length; portIdx++) {
+	   					String port = validPort[portIdx];
+	   					
+	   					for (int pathIdx = 0; pathIdx < validPath.length; pathIdx++) {
+	   						String path = validPath[pathIdx];
+	   						
+	   						for (int queryIdx = 0; queryIdx < validQuery.length; queryIdx++) {
+	   							String query = validQuery[queryIdx];
+
+	   							StringBuilder urlBuilder = new StringBuilder();
+	   							urlBuilder.append(scheme);
+	   							urlBuilder.append(separator);
+	   							urlBuilder.append(authority);
+	   							urlBuilder.append(port);
+	   							urlBuilder.append(path);
+	   							urlBuilder.append(query);
+	   							
+	   							// With UrlValidator.ALLOW_ALL_SCHEMES, only http works. The other schemes cause the program
+	   							// to crash therefore preventing the tests from continuing. There appears to be a bug in the
+	   							// regex validator when using UrlValidator.ALLOW_ALL_SCHEMES. Each crashing case is skipped
+	   							// over so the program can continue running, but it is still counted as a failure in the final count.
+	   							runs++;
+	   							failures++;
+	   							if (scheme.equals("http")) {
+	   								String url = urlBuilder.toString();
+		   							result = validator.isValid(url);
+		   							
+		   							if (result == false) {
+		   								//System.out.println("Test FAILED with URL: " + url);
+		   								
+		   							} else {
+		   								//System.out.println("Test PASS with URL:   " + url);
+		   								failures--;
+		   							}
+	   							}
+	   						}
+	   					}
+	   				}
+	   			}
+	   		}
+	   }
+
+	   System.out.printf("Runs: %d, failures: %d\n", runs, failures);	
+
+
+	   runs = 0;
+	   failures = 0;
+
+
+	   // Unit Test #3 - all components, ALLOW_ALL_SCHEMES and DEFAULT_SCHEMES
+
+	   /* Description:
+		* Third unit test matches every combination of valid and invalid URL component into a URL string and
+		* passes it to isValid(), checking the result against the expected 'true'/'false' value.
+		* If the URL contains just one invalid component, the entire URL is expected to evaluate to 'false'.
+		* This test uses a RNG as a way to generate all the possible combinations of valid and invalid URL parts.
+		* It's not really a 'random test' because it just generates an exhaustive list of all possible URLs from
+		* the component parts, it was just easier to do it using a RNG rather than iterating through each of the 
+		* array indeces.
+		*/
+
+		/* Outputs:
+		 * This test outputs to the console each URL component that was involved in the failure, and the number of
+		 * times that part was in a failing test case. It might be useful to shed light on where the problem areas
+		 * within the code might be found.
+		 */
+
+	   System.out.println();
+	   System.out.println("Random test - valid and invalid - all possible combinations");
+
+	   UrlValidator validators[] = {new UrlValidator(UrlValidator.ALLOW_ALL_SCHEMES), new UrlValidator(null, null, 0L)};
+		
+		Random rand = new Random();
+
+		int valIdx;
+		int schemeIdx;
+		int separatorIdx;
+		int authorityIdx;
+		int portIdx;
+		int pathIdx;
+		int queryIdx;
+
+		UrlValidator urlVal;
+		String scheme;
+		String separator;
+		String authority;
+		String port;
+		String path;
+		String query;
+
+		int counter = 700000;	// Aproximately the minimum number of iterations required to hit all the combinations (44,010)
+		boolean expected;
+
+		// Store each unique URL so we don't count the same URL in the failure counts
+		Set<String> urlSet = new HashSet<String>();
+
+		// Hash maps will store the occurrence of each item in a test failure
+		Map<String,Integer> httpMap = new HashMap<String,Integer>();
+		Map<String,Integer> valMap = new HashMap<String,Integer>();
+		Map<String,Integer> schemeMap = new HashMap<String,Integer>();
+		Map<String,Integer> sepMap = new HashMap<String,Integer>();
+		Map<String,Integer> authorityMap = new HashMap<String,Integer>();
+		Map<String,Integer> portMap = new HashMap<String,Integer>();
+		Map<String,Integer> pathMap = new HashMap<String,Integer>();
+		Map<String,Integer> queryMap = new HashMap<String,Integer>();
+
+		while (counter-- > 0) {
+			// Generate all the new strings for the next iteration
+			expected = true;
+			valIdx = rand.nextInt(2);
+			urlVal = validators[valIdx];
+
+			// Pick the 'scheme' string
+			schemeIdx = rand.nextInt(validScheme.length + invalidScheme.length);
+			if (schemeIdx < validScheme.length) {
+				scheme = validScheme[schemeIdx];
+			} else {
+				scheme = invalidScheme[schemeIdx - validScheme.length];
+				expected = false;
+			}
+			
+			// Pick the 'separator' string
+			separatorIdx = rand.nextInt(validAuthoritySeparator.length + invalidAuthoritySeparator.length);
+			if (separatorIdx < validAuthoritySeparator.length) {
+				separator = validAuthoritySeparator[separatorIdx];
+			} else {
+				separator = invalidAuthoritySeparator[separatorIdx - validAuthoritySeparator.length];
+				expected = false;
+			}
+
+			// Pick the 'authority' string
+			authorityIdx = rand.nextInt(validAuthority.length + invalidAuthority.length);
+			if (authorityIdx < validAuthority.length) {
+				authority = validAuthority[authorityIdx];
+			} else {
+				authority = invalidAuthority[authorityIdx - validAuthority.length];
+				expected = false;
+			}
+
+			// Pick the 'port' string
+			portIdx = rand.nextInt(validPort.length + invalidPort.length);
+			if (portIdx < validPort.length) {
+				port = validPort[portIdx];
+			} else {
+				port = invalidPort[portIdx - validPort.length];
+				expected = false;
+			}
+
+			// Pick the 'pathIdx' string
+			pathIdx = rand.nextInt(validPath.length + invalidPath.length);
+			if (pathIdx < validPath.length) {
+				path = validPath[pathIdx];
+			} else {
+				path = invalidPath[pathIdx - validPath.length];
+				expected = false;
+			}
+
+			// Pick the 'query' string
+			queryIdx = rand.nextInt(validQuery.length);
+			query = validQuery[queryIdx];
+
+			// build the URL string
+			StringBuilder urlBuilder = new StringBuilder();
+			urlBuilder.append(scheme);
+			urlBuilder.append(separator);
+			urlBuilder.append(authority);
+			urlBuilder.append(port);
+			urlBuilder.append(path);
+			urlBuilder.append(query);
+			String url = urlBuilder.toString();
+
+			// If this URL hasn't been evaluated before, add it to the set of evaluated URLs and check for failures
+			if (!urlSet.contains(url)) {
+				urlSet.add(url);
+				boolean failed = false;
+				
+				// valIdx == 0 (ALLOW_ALL_SCHEMES) and scheme either 'https' or 'ftp' cause the program to halt execution.
+				// So these are hard-coded as failures each time they come up without having to call isValid()
+				if (valIdx == 0 && (scheme.equals("https") || scheme.equals("ftp"))) {
+					failures++;
+					if (httpMap.containsKey("ALLOW_ALL_SCHEMES + https/ftp")) {
+						int curVal = httpMap.get("ALLOW_ALL_SCHEMES + https/ftp");
+						httpMap.put("ALLOW_ALL_SCHEMES + https/ftp", curVal + 1);
+					} else {
+						httpMap.put("ALLOW_ALL_SCHEMES + https/ftp", 1);
+					}
+				}
+				else {
+					result = urlVal.isValid(url);
+					if (result != expected) {
+						failed = true;
+					}
+				}
+
+				if (failed) {
+					failures++;
+					if (valIdx == 1) {
+						if (valMap.containsKey("DEFAULT_SCHEMES")) {
+							int curVal = valMap.get("DEFAULT_SCHEMES");
+							valMap.put("DEFAULT_SCHEMES", curVal + 1);
+						} else {
+							valMap.put("DEFAULT_SCHEMES", 1);
+						}
+					} else {
+						if (valMap.containsKey("ALLOW_ALL_SCHEMES")) {
+							int curVal = valMap.get("ALLOW_ALL_SCHEMES");
+							valMap.put("ALLOW_ALL_SCHEMES", curVal + 1);
+						} else {
+							valMap.put("ALLOW_ALL_SCHEMES", 1);
+						}
+					}
+
+					if (schemeMap.containsKey(scheme)) {
+						int curVal = schemeMap.get(scheme);
+						schemeMap.put(scheme, curVal + 1);
+					} else {
+						schemeMap.put(scheme, 1);
+					}
+
+					if (sepMap.containsKey(separator)) {
+						int curVal = sepMap.get(separator);
+						sepMap.put(separator, curVal + 1);
+					} else {
+						sepMap.put(separator, 1);
+					}
+
+					if (authorityMap.containsKey(authority)) {
+						int curVal = authorityMap.get(authority);
+						authorityMap.put(authority, curVal + 1);
+					} else {
+						authorityMap.put(authority, 1);
+					}
+
+					if (portMap.containsKey(port)) {
+						int curVal = portMap.get(port);
+						portMap.put(port, curVal + 1);
+					} else {
+						portMap.put(port, 1);
+					}
+
+					if (pathMap.containsKey(path)) {
+						int curVal = pathMap.get(path);
+						pathMap.put(path, curVal + 1);
+					} else {
+						pathMap.put(path, 1);
+					}
+
+					if (queryMap.containsKey(query)) {
+						int curVal = queryMap.get(query);
+						queryMap.put(query, curVal + 1);
+					} else {
+						queryMap.put(query, 1);
+					}
+				}
+				runs++;
+			}
+			
+		}
+		
+		// Output the failure results to the console
+
+		System.out.printf("Runs: %d, failures: %d\n", runs, failures);
+		System.out.println();
+		System.out.println("Failure counts:");
+
+		System.out.println();
+		System.out.println("Special case:");
+		for (Map.Entry m:httpMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Validator type:");
+		for (Map.Entry m:valMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Scheme:");
+		for (Map.Entry m:schemeMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Separator:");
+		for (Map.Entry m:sepMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Authority:");
+		for (Map.Entry m:authorityMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Port:");
+		for (Map.Entry m:portMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Path:");
+		for (Map.Entry m:pathMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
+		System.out.println();
+		System.out.println("Query:");
+		for (Map.Entry m:queryMap.entrySet()) {
+			System.out.println("\"" + m.getKey() + "\" " + m.getValue());
+		}
 
 
 
@@ -467,5 +866,23 @@ public class UrlValidatorTest extends TestCase {
 	  System.out.printf("Programming based test session has ended.\n");	
 	  System.out.printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
 	}
+	
+	// Some test components
+		String validScheme[] = { "http", "ftp", "https" };
+		String invalidScheme[] = { "3", "" };
+		
+		String validAuthoritySeparator[] = { "://" };
+		String invalidAuthoritySeparator[] = { ":/", ":", "/", "//"};
+		
+		String validAuthority[] = { "www.google.com", "google.com", "google.co", "0.0.0.0", "255.255.255.255" };
+		String invalidAuthority[] = { "google.comm", "google.c", "google.", "google", "-1.-1.-1.-1", "256.256.256.256", "google.g0c", ".", "" };
+		
+		String validPort[] = { "", ":80", ":65535" };
+		String invalidPort[] = { ":", ":b", ":-1", ":65535" };
+
+		String validPath[] = { "", "/", "/slash", "/2slashes/" };
+		String invalidPath[] = { "//", "noslash", "slash/" };
+
+		String validQuery[] = { "", "?test=true", "?test=true&param2=true" };
 
 }
